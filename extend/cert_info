@@ -1,0 +1,105 @@
+#!/bin/sh
+
+# cert_info
+#
+# Get information about a certificate stored in a file.
+# Currently supports only PKCS#12 certificate files.
+#
+# Designed to be used on Check Point Gaia R80.40+ to check
+# ICA and SIC certificates.
+
+# TODO
+# * openssl x509 -enddate -noout -in my.pem -checkend 604800
+
+# installation on Gaia:
+# /etc/snmp/userDefinedSettings.conf
+# extend cert_ica_exp /usr/local/bin/cert_info ica expiration
+# extend cert_sic_exp /usr/local/bin/cert_info sic expiration
+
+# clish -c 'set snmp agent off' && clish -c 'set snmp agent on'
+
+# test
+# snmptable localhost NET-SNMP-EXTEND-MIB::nsExtendOutput1Table
+# snmptable localhost NET-SNMP-EXTEND-MIB::nsExtendOutput2Table
+# snmpwalk localhost NET-SNMP-EXTEND-MIB::nsExtendOutput1Line
+# snmpget localhost 'NET-SNMP-EXTEND-MIB::nsExtendOutput1Line."cert_ica_expi"'
+
+# openssl on Check Point Gaia:
+openssl=cpopenssl
+
+errexit () {
+    printf Fail\\n
+    printf %s\\n "$*" >&2
+    exit 1
+}
+
+SEC_IN_DAY=$((24 * 60 * 60))
+
+if test $# != 3 ; then
+    errexit 'Tool cert_info requires three arguments.'
+fi
+
+# certificate file locations:
+case "$1" in
+    ica)
+        cert_file="$FWDIR/conf/InternalCA.p12"
+        ;;
+    sic)
+        cert_file="$CPDIR/conf/sic_cert.p12"
+        ;;
+    *)
+        errexit 'Certificate type must be ica or sic.'
+esac
+
+# information extraction
+case "$2" in
+    expiration)
+        x509_opt="-noout -enddate"
+        sed_filter='s/^notAfter=//p'
+        ;;
+    exp2months)
+        x509_opt="-noout -checkend $((60 * SEC_IN_DAY))"
+        sed_filter='s/^Certificate will expire/Expires/p;s/^Certificate will not expire/OK/p'
+        ;;
+    exp3months)
+        x509_opt="-noout -checkend $((90 * SEC_IN_DAY))"
+        sed_filter='s/^Certificate will expire/Expires/p;s/^Certificate will not expire/OK/p'
+        ;;
+    *)
+        errexit 'Unknown query type.'
+esac
+
+# information conversion
+case "$3" in
+    unix)
+        convert () {
+            date -d "$1" +%s
+        }
+        ;;
+    iso-8601-compact-date)
+        convert () {
+            date -d "$1" +%Y%m%d
+        }
+        ;;
+    identity)
+        convert () {
+            printf %s\\n "$1"
+        }
+        ;;
+    *)
+        errexit 'Unknown conversion.'
+esac
+
+# shellcheck disable=SC2086
+output=$(
+    "$openssl" pkcs12 -in "$cert_file" -nokeys -nomacver -passin pass: 2>/dev/null |
+    "$openssl" x509 $x509_opt 2>/dev/null |
+    sed -n "$sed_filter")
+
+# check and write the result
+test -z "$output" && errexit 'Query failed - empty output.'
+
+output=$(convert "$output" 2>/dev/null)
+test -z "$output" && errexit 'Conversion failed - empty output.'
+
+printf %s\\n "$output"
