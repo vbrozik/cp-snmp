@@ -3,6 +3,8 @@
         "checkend",
         "cpopenssl",
         "enddate",
+        "expi",
+        "expu",
         "nokeys",
         "nomacver",
         "noout",
