@@ -48,7 +48,7 @@ case "$1" in
         cert_file="$CPDIR/conf/sic_cert.p12"
         ;;
     *)
-        errexit 'Certificate type must be ica or sic.'
+        errexit "Unknown certificate type, got: '$1'"
 esac
 
 # information extraction
@@ -66,7 +66,7 @@ case "$2" in
         sed_filter='s/^Certificate will expire/Expires/p;s/^Certificate will not expire/OK/p'
         ;;
     *)
-        errexit 'Unknown query type.'
+        errexit "Unknown query type, got: '$2'"
 esac
 
 # information conversion
@@ -87,7 +87,7 @@ case "$3" in
         }
         ;;
     *)
-        errexit 'Unknown conversion.'
+        errexit "Unknown conversion, got: '$3'"
 esac
 
 # shellcheck disable=SC2086
@@ -99,7 +99,7 @@ output=$(
 # check and write the result
 test -z "$output" && errexit 'Query failed - empty output.'
 
-output=$(convert "$output" 2>/dev/null)
+output=$(convert "$output" 2>/dev/null) || errexit 'Conversion failed.'
 test -z "$output" && errexit 'Conversion failed - empty output.'
 
 printf %s\\n "$output"
