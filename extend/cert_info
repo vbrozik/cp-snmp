@@ -27,13 +27,13 @@
 # openssl on Check Point Gaia:
 openssl=cpopenssl
 
+SEC_IN_MONTH=$((30 * 24 * 60 * 60))
+
 errexit () {
     printf Fail\\n
     printf %s\\n "$*" >&2
     exit 1
 }
-
-SEC_IN_DAY=$((24 * 60 * 60))
 
 if test $# != 3 ; then
     errexit 'Tool cert_info requires three arguments.'
@@ -51,19 +51,19 @@ case "$1" in
         errexit "Unknown certificate type, got: '$1'"
 esac
 
-# information extraction
+sed_filter_checkend='s/^Certificate will expire/Expires/p;s/^Certificate will not expire/OK/p'
 case "$2" in
     expiration)
         x509_opt="-noout -enddate"
         sed_filter='s/^notAfter=//p'
         ;;
     exp2months)
-        x509_opt="-noout -checkend $((60 * SEC_IN_DAY))"
-        sed_filter='s/^Certificate will expire/Expires/p;s/^Certificate will not expire/OK/p'
+        x509_opt="-noout -checkend $((2 * SEC_IN_MONTH))"
+        sed_filter="$sed_filter_checkend"
         ;;
     exp3months)
-        x509_opt="-noout -checkend $((90 * SEC_IN_DAY))"
-        sed_filter='s/^Certificate will expire/Expires/p;s/^Certificate will not expire/OK/p'
+        x509_opt="-noout -checkend $((3 * SEC_IN_MONTH))"
+        sed_filter="$sed_filter_checkend"
         ;;
     *)
         errexit "Unknown query type, got: '$2'"
