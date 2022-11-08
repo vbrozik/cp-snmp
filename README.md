@@ -46,5 +46,5 @@ defAuthType             SHA-256
 defPrivType             AES
 
 defPassphrase           password
-++END
++++END
 ```
