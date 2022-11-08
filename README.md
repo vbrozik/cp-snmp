@@ -19,6 +19,7 @@ This directory contains programs used to implement custom OIDs.
 2. Restart snmp daemon:
    `clish -c 'set snmp agent off' && clish -c 'set snmp agent on'`
 3. Test reading the OIDs:
+
 ``` bash
 # Table showing first line of output of all extend custom OIDs:
 snmptable localhost NET-SNMP-EXTEND-MIB::nsExtendOutput1Table
@@ -33,6 +34,8 @@ snmpwalk localhost NET-SNMP-EXTEND-MIB::nsExtendObjects
 ```
 
 ## Preparing snmp tools
+
+You can prepare the default parameters for the Net-snmp tools . The following settings were tested on Check Point Gaia.
 
 ``` bash
 mkdir -p ~/.snmp/mibs/
