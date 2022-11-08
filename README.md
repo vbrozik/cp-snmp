@@ -37,7 +37,7 @@ snmpwalk localhost NET-SNMP-EXTEND-MIB::nsExtendObjects
 ``` bash
 mkdir -p ~/.snmp/mibs/
 ln -s "$CPDIR/lib/snmp/chkpnt.mib" ~/.snmp/mibs/
-cat >~.snmp/snmp.conf <<+++END
+cat >~/.snmp/snmp.conf <<+++END
 defVersion              3
 defSecurityName         username
 defSecurityLevel        authPriv
