@@ -82,6 +82,14 @@ case "$2" in
         x509_opt="-noout -checkend $((3 * SEC_IN_MONTH))"
         sed_filter="$sed_filter_checkend"
         ;;
+    exp6months)
+        x509_opt="-noout -checkend $((6 * SEC_IN_MONTH))"
+        sed_filter="$sed_filter_checkend"
+        ;;
+    exp36months)
+        x509_opt="-noout -checkend $((36 * SEC_IN_MONTH))"
+        sed_filter="$sed_filter_checkend"
+        ;;
     *)
         errexit "Unknown query type, got: '$2'"
 esac
