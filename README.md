@@ -10,6 +10,10 @@ This directory contains programs used to implement custom OIDs.
 
 * `cert_info` - obtain information about ICA and SIC certificates, mainly expiration date
   * See examples in `userDefinedSettings_examples.conf`.
+  * Info about certificates validity:
+    * ICA - valid for 20+ years, but not over the Unix epoch 32-bit 2038-01-19 03:14:07 UTC
+    * SIC - valid for 5 years
+    * IKE - valid for 1 year
 
 ### Working with extend OIDs
 
@@ -40,7 +44,7 @@ You can prepare the default parameters for the Net-snmp tools . The following se
 ``` bash
 mkdir -p ~/.snmp/mibs/
 ln -s "$CPDIR/lib/snmp/chkpnt.mib" ~/.snmp/mibs/
-cat >~/.snmp/snmp.conf <<+++END
+cat > ~/.snmp/snmp.conf <<+++END
 defVersion              3
 defSecurityName         username
 defSecurityLevel        authPriv
