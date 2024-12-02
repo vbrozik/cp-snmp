@@ -14,7 +14,7 @@
 # --------------------
 # 1. Copy the script to /usr/local/bin or other location (e.g. under /opt)
 # 2. Add settings into /etc/snmp/userDefinedSettings.conf
-#    extend cert_ica_expu /usr/local/bin/cert_info ica expiration unix
+#    extend cert_ica_expi /usr/local/bin/cert_info ica expiration iso-8601-compact-date
 #    See other examples in userDefinedSettings_examples.conf.
 # 3. Restart snmp agent:
 #    clish -c 'set snmp agent off' && clish -c 'set snmp agent on'
@@ -32,7 +32,7 @@
 #                   TODO: support for VS SIC certificates
 # <information> - information to retrieve
 #               - expiration - expiration date-time
-#               - exp2months, exp3months - whether certificate expires
+#               - exp2months, exp3months, exp6months - whether certificate expires
 #                   use the conversion "identity" (below) to get "OK" or "Expires"
 # <conversion>  - conversion of the information (output format)
 #               - unix - Unix epoch time (number of seconds since 1970-01-01)
