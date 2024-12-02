@@ -44,6 +44,9 @@ For testing run the script `tools/snmp_test.bash`
 It will add a temporary SNMP user, run `snmpwalk` on few usual OIDs and then run `snmpwalk`
 on the custom OIDs. Check if there are the wanted OIDs with expected values.
 
+If complaints about `configuration lock present` appear, run `clish -c 'lock database override'`
+to override the lock.
+
 ### Preparing snmp tools
 
 You can prepare the default parameters for the Net-snmp tools . The following settings were
