@@ -37,9 +37,18 @@ snmpget localhost 'NET-SNMP-EXTEND-MIB::nsExtendOutput1Line."cert_ica_expi"'
 snmpwalk localhost NET-SNMP-EXTEND-MIB::nsExtendObjects
 ```
 
-## Preparing snmp tools
+## Testing the deployment
 
-You can prepare the default parameters for the Net-snmp tools . The following settings were tested on Check Point Gaia.
+For testing run the script `tools/snmp_test.bash`
+
+It will add a temporary SNMP user, run `snmpwalk` on few usual OIDs and then run `snmpwalk`
+on the custom OIDs. Check if there are the wanted OIDs with expected values.
+
+### Preparing snmp tools
+
+You can prepare the default parameters for the Net-snmp tools . The following settings were
+tested on Check Point Gaia. The testing script (above) already makes this preparation except
+for the username and password.
 
 ``` bash
 mkdir -p ~/.snmp/mibs/
