@@ -25,6 +25,7 @@ We use [bats-core](https://github.com/bats-core/bats-core) (Bash Automated Testi
 ```sh
 # Dependencies were added to package.json to facilitate this setup.
 npm install --save-dev bats
+npm install --save-dev bats-assert
 
 # To update all packages to their latest versions based on the version ranges in package.json
 npm update
